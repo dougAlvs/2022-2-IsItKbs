@@ -7,6 +7,7 @@ from scipy.sparse import hstack, csr_matrix
 import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
+
 class isitkbs(object):
 
     def __init__(self, model='randomforest'):
@@ -223,7 +224,34 @@ class isitkbs(object):
                 output_data.append(value if i in wordskbs else i)
         return ' '.join(output_data) if not is_list else output_data
     
+    def statisticsKbs(self, file_path):
+        with open(file_path, 'r') as f:
+            text = f.read()
+            wordList = text.split()
 
+        total = len(wordList)
+        if not total:
+            return {
+            'Total of words:': 0,
+            'Total of mashings:': 0,
+            'Total of non mashings:': 0,
+            'Smashing percentage:': 0.0,
+        }
+
+        mashings = 0
+
+        for word in wordList:
+            if self.wordkbs(word): mashings += 1
+
+        nonMashings = total - mashings
+        smashingPercentage = (mashings / total) * 100 
+
+        return {
+            'Total of words:': total,
+            'Total of mashings:': mashings,
+            'Total of non mashings:': nonMashings,
+            'Smashing percentage:': smashingPercentage,
+        }
 
 class lex_extractor():
     """Classe auxiliar da isitkbs para extração de features lexicais.
